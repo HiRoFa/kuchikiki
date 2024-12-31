@@ -2,6 +2,7 @@ use html5ever::tree_builder::QuirksMode;
 use html5ever::QualName;
 use std::cell::{Cell, RefCell};
 use std::fmt;
+use std::hash::{Hash, Hasher};
 use std::ops::Deref;
 use std::rc::{Rc, Weak};
 
@@ -110,6 +111,13 @@ impl PartialEq for NodeRef {
         let a: *const Node = &*self.0;
         let b: *const Node = &*other.0;
         a == b
+    }
+}
+
+impl Hash for NodeRef {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        let ptr = Rc::as_ptr(&self.0);
+        ptr.hash(state);
     }
 }
 
